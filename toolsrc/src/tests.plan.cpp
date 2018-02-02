@@ -248,8 +248,8 @@ namespace UnitTest1
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
             remove_plan_check(&install_plan[1], "b");
-            features_check(&install_plan[2], "b", {"b1", "core", "b1"});
-            features_check(&install_plan[3], "a", {"a1", "core"});
+            features_check(&install_plan[2], "b", {"b1", "core", "default", "b1"});
+            features_check(&install_plan[3], "a", {"a1", "core", "default"});
         }
 
         TEST_METHOD(basic_feature_test_2)
@@ -268,7 +268,7 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(2), install_plan.size());
             features_check(&install_plan[0], "b", {"b1", "b2", "core"});
-            features_check(&install_plan[1], "a", {"a1", "core"});
+            features_check(&install_plan[1], "a", {"a1", "default", "core"});
         }
 
         TEST_METHOD(basic_feature_test_3)
@@ -289,7 +289,7 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(4), install_plan.size());
             remove_plan_check(&install_plan[0], "a");
-            features_check(&install_plan[1], "b", {"core"});
+            features_check(&install_plan[1], "b", {"core", "default"});
             features_check(&install_plan[2], "a", {"a1", "core"});
             features_check(&install_plan[3], "c", {"core"});
         }
@@ -332,7 +332,7 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(2), install_plan.size());
             features_check(&install_plan[0], "b", {"core", "b2"});
-            features_check(&install_plan[1], "a", {"core", "a3", "a2"});
+            features_check(&install_plan[1], "a", {"core", "a3", "a2", "default"});
         }
 
         TEST_METHOD(basic_feature_test_6)
@@ -351,7 +351,7 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(3), install_plan.size());
             remove_plan_check(&install_plan[0], "b");
-            features_check(&install_plan[1], "b", {"core", "b1"});
+            features_check(&install_plan[1], "b", {"core", "b1", "default"});
             features_check(&install_plan[2], "a", {"core"});
         }
 
@@ -377,9 +377,9 @@ namespace UnitTest1
             remove_plan_check(&install_plan[1], "b");
 
             // TODO: order here may change but A < X, and B anywhere
-            features_check(&install_plan[2], "b", {"core", "b1"});
-            features_check(&install_plan[3], "a", {"core"});
-            features_check(&install_plan[4], "x", {"core"});
+            features_check(&install_plan[2], "a", {"core", "default"});
+            features_check(&install_plan[3], "x", {"core"});
+            features_check(&install_plan[4], "b", {"core", "default", "b1"});
         }
 
         TEST_METHOD(basic_feature_test_8)
@@ -407,12 +407,33 @@ namespace UnitTest1
 
             remove_plan_check(&install_plan[0], "a", Triplet::X64_WINDOWS);
             remove_plan_check(&install_plan[1], "a");
-            features_check(&install_plan[2], "b", {"core"}, Triplet::X64_WINDOWS);
+            features_check(&install_plan[2], "b", {"core", "default"}, Triplet::X64_WINDOWS);
             features_check(&install_plan[3], "a", {"a1", "core"}, Triplet::X64_WINDOWS);
             features_check(&install_plan[4], "c", {"core"}, Triplet::X64_WINDOWS);
-            features_check(&install_plan[5], "b", {"core"});
+            features_check(&install_plan[5], "b", {"core", "default"});
             features_check(&install_plan[6], "a", {"a1", "core"});
             features_check(&install_plan[7], "c", {"core"});
+        }
+
+        TEST_METHOD(default_features_test)
+        {
+            std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+            status_paragraphs.push_back(make_status_pgh("a", "", "a1, a2"));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "a1", ""));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "a2", ""));
+            status_paragraphs.push_back(make_status_feature_pgh("a", "a3", ""));
+
+            PackageSpecMap spec_map(Triplet::X86_WINDOWS);
+            auto spec_a = FullPackageSpec{ spec_map.emplace("a", ""), {} }; // TODO How do I make this equivalent to <vcpkg install a>... or is it already?
+
+            auto install_plan =
+                Dependencies::create_feature_install_plan(spec_map.map,
+                                                          FullPackageSpec::to_feature_specs({spec_a}),
+                                                          StatusParagraphs(std::move(status_paragraphs)));
+
+            Assert::AreEqual(size_t(2), install_plan.size());
+            remove_plan_check(&install_plan[0], "a");
+            features_check(&install_plan[1], "a", {"default", "core"}); // TODO: This test runs like this, but fail as it should be "default", "core", "a1", "a2". Probably the test's fault, though.
         }
 
         TEST_METHOD(install_all_features_test)

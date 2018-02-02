@@ -57,9 +57,17 @@ namespace vcpkg
         std::vector<FeatureSpec> ret;
         for (auto&& spec : specs)
         {
-            ret.emplace_back(spec.package_spec, "");
+            bool bcore = false;
             for (auto&& feature : spec.features)
+            {
                 ret.emplace_back(spec.package_spec, feature);
+                bcore = bcore || feature.compare("core") == 0;
+            }
+
+            if (!bcore) {
+                // "core" not specified, install default features
+                ret.emplace_back(spec.package_spec, "");
+            }
         }
         return ret;
     }

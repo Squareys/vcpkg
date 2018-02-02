@@ -97,6 +97,12 @@ namespace vcpkg::Dependencies
                 added_edges.build_edges = filter_dependencies_to_specs(feature->depends, out_cluster.spec.triplet());
                 out_cluster.edges.emplace(feature->name, std::move(added_edges));
             }
+
+            FeatureNodeEdges default_dependencies; // dependencies of "default" feature package
+            default_dependencies.build_edges =
+                filter_dependencies_to_specs(scf.core_paragraph->default_features, out_cluster.spec.triplet());
+            out_cluster.edges.emplace("default", std::move(default_dependencies));
+
             out_cluster.source_control_file = &scf;
         }
 
@@ -422,8 +428,8 @@ namespace vcpkg::Dependencies
     {
         if (feature.empty())
         {
-            // Indicates that core was not specified in the reference
-            return mark_plus("core", cluster, graph, graph_plan);
+            // Indicates that default package should be added
+            return mark_plus("default", cluster, graph, graph_plan);
         }
 
         auto it = cluster.edges.find(feature);

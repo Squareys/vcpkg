@@ -78,6 +78,7 @@ namespace vcpkg
         this->description = spgh.description;
         this->maintainer = spgh.maintainer;
         this->depends = filter_dependencies(spgh.depends, triplet);
+        // TODO: add default_features here
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet)
@@ -88,6 +89,7 @@ namespace vcpkg
         this->description = fpgh.description;
         this->maintainer = "";
         this->depends = filter_dependencies(fpgh.depends, triplet);
+        // TODO: add default_features here
     }
 
     std::string BinaryParagraph::displayname() const
@@ -111,6 +113,7 @@ namespace vcpkg
             out_str.append("Version: ").append(pgh.version).push_back('\n');
         else if (!pgh.feature.empty())
             out_str.append("Feature: ").append(pgh.feature).push_back('\n');
+        // TODO: add default_features here
         if (!pgh.depends.empty())
         {
             out_str.append("Depends: ");

@@ -22,7 +22,7 @@ namespace UnitTest1
 
             Assert::AreEqual(size_t(6), fspecs.size());
 
-            std::array<const char*, 6> features = {"", "0", "1", "", "2", "3"};
+            std::array<const char*, 6> features = {"0", "1", "", "2", "3", ""};
             std::array<PackageSpec*, 6> specs = {&a_spec, &a_spec, &a_spec, &b_spec, &b_spec, &b_spec};
 
             for (size_t i = 0; i < features.size(); ++i)
