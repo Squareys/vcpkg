@@ -47,7 +47,7 @@ namespace vcpkg
         std::string maintainer;
         std::vector<std::string> supports;
         std::vector<Dependency> depends;
-        std::vector<std::string> default_features;
+        std::vector<Dependency> default_features;
     };
     struct SourceControlFile
     {

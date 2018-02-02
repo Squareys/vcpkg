@@ -100,7 +100,8 @@ namespace vcpkg
         spgh->depends = expand_qualified_dependencies(
             parse_comma_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS)));
         spgh->supports = parse_comma_list(parser.optional_field(SourceParagraphFields::SUPPORTS));
-        spgh->default_features = parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES));
+        spgh->default_features = expand_qualified_dependencies(
+            parse_comma_list(parser.optional_field(SourceParagraphFields::DEFAULTFEATURES)));
 
         auto err = parser.error_info(spgh->name);
         if (err)
