@@ -2,7 +2,7 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF f0ddc63385e30c3bae362789855a95de7c46f8a7 
+    REF f0ddc63385e30c3bae362789855a95de7c46f8a7
     SHA512 d0afda7be75efd2dec731e9435732220a76e735ef58d860f7119f206b1d5828af6e70aca3517b0f930c83440930ed62cb03e6c123e37771b72c50ddb44676945
     HEAD_REF master
 )
@@ -21,22 +21,27 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
+# Handle features
+set(_COMPONENT_FLAGS "")
+foreach(_feature IN LISTS ALL_FEATURES)
+    # Uppercase the feature name and replace "-" with "_"
+    string(TOUPPER ${_feature} _FEATURE)
+    string(REPLACE "-" "_" _FEATURE ${_FEATURE})
+
+    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
+    # is in the list.
+    if(_feature IN_LIST FEATURES)
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
+    else()
+        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
+    endif()
+endforeach()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        -DWITH_STBIMAGECONVERTER=ON
-        -DWITH_STBIMAGEIMPORTER=ON
-        -DWITH_STBTRUETYPEFONT=ON
-        -DWITH_STBTRUETYPEFONT=ON
-        -DWITH_MINIEXRIMAGECONVERTER=ON
-        -DWITH_OPENGEXIMPORTER=ON
-        -DWITH_OPENGEXIMPORTER=ON
-        -DWITH_STANFORDIMPORTER=ON
-        -DWITH_DRWAVAUDIOIMPORTER=ON
-        -DWITH_ANYAUDIOIMPORTER=ON
-        -DWITH_ANYIMAGECONVERTER=ON
-        -DWITH_ANYSCENEIMPORTER=ON
+        ${_COMPONENT_FLAGS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
