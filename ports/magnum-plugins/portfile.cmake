@@ -1,22 +1,11 @@
-set(_RELEASE_ONLY_PATCHES)
-if(NOT VCPKG_USE_HEAD_VERSION)
-    vcpkg_download_distfile(
-        _RELEASE_ONLY_PATCHES
-        URLS "https://github.com/mosra/magnum-plugins/commit/c2a05465fa43befbb628b424378e328fa42923b7.diff"
-        FILENAME "c2a05465fa43befbb628b424378e328fa42923b7.diff"
-        SHA512 e03953ff7319b3b8e3644b8e25c006a856dd6a85cec6e4c033f9b2059af7ae39ed84b76c11c93c41ea6a681d7f34dd5980806f49f760d1c26778047c90cc76df
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2019.10
-    SHA512 702c43b0d323dc5b903ffee3dd9aaecf2de3b6bb00e7b243880e433df12efe337e512aac75a6f38adce02eb94f3065770ff6a03b7241198f27b5c46de63e5750
+    REF v2020.06
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     HEAD_REF master
     PATCHES
         001-tools-path.patch
-        ${_RELEASE_ONLY_PATCHES}
 )
 
 if(basisimporter IN_LIST FEATURES OR basisimageconverter IN_LIST FEATURES)
@@ -27,14 +16,14 @@ if(basisimporter IN_LIST FEATURES OR basisimageconverter IN_LIST FEATURES)
         _BASIS_UNIVERSAL_PATCHES
         URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
         FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
-        SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     )
     set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
     vcpkg_download_distfile(
         _BASIS_UNIVERSAL_ARCHIVE
         URLS "https://github.com/BinomialLLC/basis_universal/archive/${_BASIS_VERSION}.tar.gz"
         FILENAME "basis-universal-${_BASIS_VERSION}.tar.gz"
-        SHA512 65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH _BASIS_UNIVERSAL_SOURCE
@@ -55,7 +44,7 @@ if(meshoptimizersceneconverter IN_LIST FEATURES)
         _MESHOPTIMIZER_ARCHIVE
         URLS "https://github.com/zeux/meshoptimizer/archive/97c52415c6d29f297a76482ddde22f739292446d.tar.gz"
         FILENAME "meshoptimizer.tar.gz"
-        SHA512 7e2934511d0f0346e552df61684aca27e8772f85f98f37942c75deb5886c5631e33a4a9e9b1318ffdfb36bce22b192d8015e354440657c08660538c98d31dd31
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH _MESHOPTIMIZER_SOURCE
