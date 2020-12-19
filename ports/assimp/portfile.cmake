@@ -29,6 +29,18 @@ set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ASSIMP_BUILD_SHARED_LIBS)
 
+if("irrmesh" IN_LIST FEATURES)
+    set(BUILD_IRRMESH_IMPORTER ON)
+else()
+    set(BUILD_IRRMESH_IMPORTER OFF)
+endif()
+
+if("irr" IN_LIST FEATURES)
+    set(BUILD_IRR_IMPORTER ON)
+else()
+    set(BUILD_IRR_IMPORTER OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -40,6 +52,8 @@ vcpkg_configure_cmake(
             -DASSIMP_INSTALL_PDB=OFF
             -DSYSTEM_IRRXML=ON
             -DIGNORE_GIT_HASH=ON
+            -DBUILD_IRR_IMPORTER=${BUILD_IRR_IMPORTER}
+            -DBUILD_IRRMESH_IMPORTER=${BUILD_IRRMESH_IMPORTER}
 )
 
 vcpkg_install_cmake()
